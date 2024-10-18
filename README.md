@@ -104,4 +104,102 @@
 
    Final output: `HELLO, ALICE!`
 
-These examples demonstrate the power and flexibility of Go templating, allowing us to iterate over data, call functions, and chain operations to manipulate and present our data effectively.
+6. With Action:
+   ```go
+   {{ with .User }}
+     Name: {{ .Name }}
+     Email: {{ .Email }}
+   {{ end }}
+   ```
+
+   The `with` action allows you to change the scope of the cursor:
+   - It checks if the value after `with` is non-empty (not nil, zero, or an empty collection).
+   - If true, it executes the block with the cursor (`.`) set to that value.
+   - If false, it skips the block entirely.
+
+   Example:
+   ```go
+   data := struct {
+       User struct {
+           Name  string
+           Email string
+       }
+   }{
+       User: struct {
+           Name  string
+           Email string
+       }{
+           Name:  "John Doe",
+           Email: "john@example.com",
+       },
+   }
+   ```
+   Output:
+   ```
+   Name: John Doe
+   Email: john@example.com
+   ```
+
+7. Template Definition and Inclusion:
+   ```go
+   {{ define "user-info" }}
+     <p>Name: {{ .Name }}</p>
+     <p>Email: {{ .Email }}</p>
+   {{ end }}
+
+   {{ template "user-info" .User }}
+   ```
+
+   This example shows how to define and include named templates:
+   - The `define` action creates a named template.
+   - The `template` action includes the named template, passing it the specified data.
+
+8. Block Action:
+   ```go
+   {{ block "content" . }}
+     <p>Default content</p>
+   {{ end }}
+   ```
+
+   The `block` action defines a template and immediately uses it:
+   - It's equivalent to defining a template and then including it.
+   - Useful for providing default content that can be overridden.
+
+9. Variable Assignment:
+   ```go
+   {{ $var := .SomeValue }}
+   {{ $var }}
+   ```
+
+   You can create and use variables within templates:
+   - Variables are prefixed with `$`.
+   - They can store values for later use in the template.
+
+10. Comparison Operators:
+    ```go
+    {{ if eq .Value 42 }}
+      The answer is 42!
+    {{ end }}
+    ```
+
+    Go templates support various comparison operators:
+    - `eq`: Equal
+    - `ne`: Not equal
+    - `lt`: Less than
+    - `le`: Less than or equal
+    - `gt`: Greater than
+    - `ge`: Greater than or equal
+
+11. Logical Operators:
+    ```go
+    {{ if and .IsAdmin (not .IsDeleted) }}
+      <p>Admin content</p>
+    {{ end }}
+    ```
+
+    Logical operators allow for complex conditions:
+    - `and`: Logical AND
+    - `or`: Logical OR
+    - `not`: Logical NOT
+
+These template actions provide more flexibility and power when working with Go templates, allowing for complex logic, scoping, and reusable components within your templates.
