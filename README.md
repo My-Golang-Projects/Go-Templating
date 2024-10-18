@@ -4,6 +4,7 @@
 1. [Introduction](#introduction)
 2. [Examples of Template Actions](#examples-of-template-actions)
 3. [Template Functions](#template-functions)
+4. [Whitespace Control in Templates](#whitespace-control-in-templates)
 
 ## Introduction
 
@@ -283,3 +284,52 @@ Go templates provide several built-in functions that can be used within template
    ```
 
 These functions can be used within template actions to perform various operations on your data, allowing for more complex logic and formatting in your templates.
+
+## Whitespace Control in Templates
+
+Go templates provide a way to control whitespace output around actions using a dash (-). This is particularly useful for formatting the output of your templates.
+
+1. Trimming Whitespace After an Action:
+   ```go
+   {{ .Value -}}
+   ```
+   The dash (-) at the end of the action will trim all whitespace (including newlines) immediately following the action.
+
+2. Trimming Whitespace Before an Action:
+   ```go
+   {{- .Value }}
+   ```
+   The dash (-) at the beginning of the action will trim all whitespace (including newlines) immediately preceding the action.
+
+3. Trimming Whitespace on Both Sides:
+   ```go
+   {{- .Value -}}
+   ```
+   Using dashes on both sides will trim whitespace before and after the action.
+
+Example:
+```go
+Number of dogs: {{ . | len -}}
+{{ range . }}
+. . .
+We could also have written {{ len . -}}.
+```
+
+In this example:
+- The first line uses `{{- }}` to remove the newline after printing the number of dogs.
+- The last line uses `{{ -}}` to remove the newline after printing the length.
+
+Note: Be cautious when using whitespace control, especially at the beginning of actions, as it can sometimes lead to unexpected results if not used carefully.
+
+### When to Use Whitespace Control
+
+1. Removing Unnecessary Newlines:
+   Particularly useful in loops to prevent extra blank lines.
+
+2. Formatting HTML or Other Structured Output:
+   Helps in creating clean, properly indented output without extraneous whitespace.
+
+3. Creating Single-Line Outputs:
+   Useful when you want to ensure all output is on a single line, regardless of how the template is formatted.
+
+Remember, readability of our template is important. Use whitespace control judiciously to balance between clean output and maintainable templates.
