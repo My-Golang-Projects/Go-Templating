@@ -2,6 +2,7 @@ package main
 
 import (
 	"os"
+	"path/filepath"
 	"text/template"
 )
 
@@ -29,7 +30,7 @@ func main() {
 
 	// create a new template with the name of the file
 	// then parse the file
-	tmpl, err := template.New(tmpfile).ParseFiles(tmpfile)
+	tmpl, err := template.New(filepath.Base(tmpfile)).ParseFiles(tmpfile)
 
 	if err != nil {
 		panic(err)
