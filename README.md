@@ -1,5 +1,12 @@
 # Go-Templating
 
+## Table of Contents
+1. [Introduction](#introduction)
+2. [Examples of Template Actions](#examples-of-template-actions)
+3. [Template Functions](#template-functions)
+
+## Introduction
+
 - A template is a file that contains static text and/or placeholders for dynamic content.
 - It contains actions, which are instructions for the template engine that tells it how to walk through the data that was passed in and what to include in the output.
 - Actions are enclosed in double curly braces {{ }} and they access the data via the *cursor*, denoted by a dot (`.`)
@@ -133,6 +140,7 @@
            Email: "john@example.com",
        },
    }
+   // `*data.User.Name*`
    ```
    Output:
    ```
@@ -202,4 +210,76 @@
     - `or`: Logical OR
     - `not`: Logical NOT
 
-These template actions provide more flexibility and power when working with Go templates, allowing for complex logic, scoping, and reusable components within your templates.
+## Template Functions
+
+Go templates provide several built-in functions that can be used within template actions. Here are some commonly used functions:
+
+1. Comparison Functions:
+   - `eq`: Equal
+   - `ne`: Not equal
+   - `lt`: Less than
+   - `le`: Less than or equal
+   - `gt`: Greater than
+   - `ge`: Greater than or equal
+
+   Example:
+   ```go
+   {{ if eq .Value 42 }}The answer is 42!{{ end }}
+   {{ if lt .Age 18 }}You are under 18.{{ end }}
+   ```
+
+2. Logical Functions:
+   - `and`: Returns the boolean AND of its arguments
+   - `or`: Returns the boolean OR of its arguments
+   - `not`: Returns the boolean NOT of its argument
+
+   Example:
+   ```go
+   {{ if and .IsAdmin (not .IsDeleted) }}Admin content{{ end }}
+   ```
+
+3. String Functions:
+   - `printf`: Formats a string using the specified format
+   - `println`: Formats using the default format for its operands and writes to standard output
+   - `html`: Returns a string with HTML special characters escaped
+   - `js`: Returns a string with JavaScript special characters escaped
+   - `urlquery`: Returns a string with URL query special characters escaped
+
+   Example:
+   ```go
+   {{ printf "Hello, %s!" .Name }}
+   {{ .Comment | html }}
+   ```
+
+4. Numeric Functions:
+   - `add`: Returns the sum of its arguments
+   - `sub`: Returns the difference between its arguments
+   - `mul`: Returns the product of its arguments
+   - `div`: Returns the quotient of its arguments
+
+   Example:
+   ```go
+   {{ add .X .Y }}
+   {{ div .Total .Count | printf "%.2f" }}
+   ```
+
+5. Slice/Array Functions:
+   - `len`: Returns the length of a string, slice, array, or map
+   - `index`: Returns the result of indexing its first argument by the following arguments
+
+   Example:
+   ```go
+   {{ len .Items }}
+   {{ index .Array 0 }}
+   ```
+
+6. Type Conversion Functions:
+   - `int`: Converts its argument to an int
+   - `float`: Converts its argument to a float64
+
+   Example:
+   ```go
+   {{ add (int .X) (int .Y) }}
+   ```
+
+These functions can be used within template actions to perform various operations on your data, allowing for more complex logic and formatting in your templates.
