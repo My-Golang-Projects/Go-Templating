@@ -2,7 +2,7 @@
 
 ---
 Name:  {{ .Name }}
-Sex:   {{ .Sex }}
+Sex:   {{ .Sex }}  ({{ if .Intact }}intact{{ else }}{{ if (eq .Sex "Female") }}spayed{{ else }}neutered{{ end }}{{ end }})
 Age:   {{ .Age }}
 Breed: {{ .Breed }}
 {{ end }}
