@@ -1,0 +1,15 @@
+<p><strong>Pets: </strong> {{ . | len }} </p>
+
+{{ range . }}
+    <hr>
+    <d1>
+        <dt>Name</dt>
+        <dd>{{ .Name }}</dd>
+        <dt>Sex</dt>
+        <dd>{{ .Sex }} ({{ if .Intact }}intact{{ else }}{{ if (eq .Sex "Female") }}spayed{{ else }}neutered{{ end }}{{ end }})</dd>
+        <dt>Age</dt>
+        <dd>{{ .Age }}</dd>
+        <dt>Breed</dt>
+        <dd>{{ join .Breed " & " }} ({{ if len .Breed }}purebred{{ else }}mixed breed{{ end }})</dd>
+    </d1>
+{{ end }}

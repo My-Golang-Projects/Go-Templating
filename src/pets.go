@@ -15,8 +15,8 @@ type Pet struct {
 	Breed  []string
 }
 
-func main() {
-	dogs := []Pet{
+func samplePets() []Pet {
+	return []Pet{
 		{Name: "Max", Sex: "Male", Age: "5", Intact: true, Breed: []string{"Golden Retriever"}},
 		{Name: "Bella", Sex: "Female", Age: "3", Intact: false, Breed: []string{"Labrador Retriever"}},
 		{Name: "Charlie", Sex: "Male", Age: "7", Intact: true, Breed: []string{"German Shepherd"}},
@@ -39,12 +39,24 @@ func main() {
 			Age:    "13 years, 3 months",
 			Breed:  []string{"German Shepherd", "Border Collie"},
 		},
+		{
+			Name:   "<script>alert(\"Gotcha!\");</script>Jujube",
+			Sex:    "Female",
+			Intact: false,
+			Age:    "10 months",
+			Breed:  []string{"German Shepherd", "Border Collie"},
+		},
 	}
+}
 
+func main() {
+	dogs := samplePets()
+
+	main_html()
 	funcMap := template.FuncMap{
 		"dec":     func(i, j int) int { return i - j },
 		"replace": strings.ReplaceAll,
-		"join": strings.Join,
+		"join":    strings.Join,
 	}
 
 	var tmpfile = "src/pets.tmpl"
