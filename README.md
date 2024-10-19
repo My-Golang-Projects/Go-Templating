@@ -5,6 +5,7 @@
 2. [Examples of Template Actions](#examples-of-template-actions)
 3. [Template Functions](#template-functions)
 4. [Whitespace Control in Templates](#whitespace-control-in-templates)
+5. [Using Go Functions in Templates](#using-go-functions-in-templates)
 
 ## Introduction
 
@@ -283,11 +284,11 @@ Go templates provide several built-in functions that can be used within template
    {{ add (int .X) (int .Y) }}
    ```
 
-These functions can be used within template actions to perform various operations on your data, allowing for more complex logic and formatting in your templates.
+These functions can be used within template actions to perform various operations on our data, allowing for more complex logic and formatting in our templates.
 
 ## Whitespace Control in Templates
 
-Go templates provide a way to control whitespace output around actions using a dash (-). This is particularly useful for formatting the output of your templates.
+Go templates provide a way to control whitespace output around actions using a dash (-). This is particularly useful for formatting the output of our templates.
 
 1. Trimming Whitespace After an Action:
    ```go
@@ -319,7 +320,7 @@ In this example:
 - The first line uses `{{- }}` to remove the newline after printing the number of dogs.
 - The last line uses `{{ -}}` to remove the newline after printing the length.
 
-Note: Be cautious when using whitespace control, especially at the beginning of actions, as it can sometimes lead to unexpected results if not used carefully.
+Note: We should be cautious when using whitespace control, especially at the beginning of actions, as it can sometimes lead to unexpected results if not used carefully.
 
 ### When to Use Whitespace Control
 
@@ -330,6 +331,112 @@ Note: Be cautious when using whitespace control, especially at the beginning of 
    Helps in creating clean, properly indented output without extraneous whitespace.
 
 3. Creating Single-Line Outputs:
-   Useful when you want to ensure all output is on a single line, regardless of how the template is formatted.
+   Useful when we want to ensure all output is on a single line, regardless of how the template is formatted.
 
 Remember, readability of our template is important. Use whitespace control judiciously to balance between clean output and maintainable templates.
+
+## Using Go Functions in Templates
+
+Go templates allow you to use both built-in functions and custom functions defined in your Go code. This feature greatly enhances the capabilities of your templates.
+
+### Built-in Functions
+
+Go templates come with several built-in functions. Some common ones include:
+
+1. `len`: Returns the length of a string, slice, map, or array
+   ```go
+   {{ len .Items }}
+   ```
+
+2. `printf`: Formats a string using the specified format
+   ```go
+   {{ printf "Hello, %s!" .Name }}
+   ```
+
+3. `index`: Returns the result of indexing its first argument by the following arguments
+   ```go
+   {{ index .Array 0 }}
+   ```
+
+4. `and`, `or`, `not`: Logical operators
+   ```go
+   {{ if and .IsAdmin (not .IsDeleted) }}Admin content{{ end }}
+   ```
+
+### Custom Functions
+
+You can also define and use custom functions in your templates. Here's how:
+
+1. Define your function in Go:
+   ```go
+   func add(a, b int) int {
+       return a + b
+   }
+   ```
+
+2. Create a template.FuncMap to hold your custom functions:
+   ```go
+   funcMap := template.FuncMap{
+       "add": add,
+   }
+   ```
+
+3. Create your template with the custom functions:
+   ```go
+   tmpl, err := template.New("myTemplate").Funcs(funcMap).Parse(templateString)
+   ```
+
+4. Use the custom function in your template:
+   ```go
+   The sum is: {{ add 5 3 }}
+   ```
+
+### Example: Using Custom Functions
+
+Here's a complete example of defining and using a custom function in a template:
+
+```go
+package main
+
+import (
+    "os"
+    "text/template"
+)
+
+func multiply(a, b int) int {
+    return a * b
+}
+
+func main() {
+    funcMap := template.FuncMap{
+        "multiply": multiply,
+    }
+
+    const templateText = "{{.X}} times {{.Y}} is {{multiply .X .Y}}"
+
+    tmpl, err := template.New("calc").Funcs(funcMap).Parse(templateText)
+    if err != nil {
+        panic(err)
+    }
+
+    data := struct {
+        X, Y int
+    }{3, 4}
+
+    err = tmpl.Execute(os.Stdout, data)
+    if err != nil {
+        panic(err)
+    }
+}
+```
+
+This will output: "3 times 4 is 12"
+
+### Best Practices
+
+1. Keep template logic simple. If you find yourself needing complex logic, consider moving it to Go code.
+2. Use descriptive names for your custom functions.
+3. Remember that functions used in templates should return values that can be printed or used in template constructs.
+4. Be cautious with functions that modify state, as templates are often used in concurrent environments.
+
+By combining built-in functions, custom functions, and Go's powerful templating syntax, you can create flexible and dynamic templates for various use cases.

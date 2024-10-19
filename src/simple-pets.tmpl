@@ -1,4 +1,4 @@
-{{ range (dec (len .) 3 | slice .) -}}
+{{ range (len . | dec | dec | slice .) -}}
 ---
 Name:  {{ .Name }}
 Sex:   {{ .Sex }}  ({{ if .Intact }}intact{{ else }}{{ if (eq .Sex "Female") }}spayed{{ else }}neutered{{ end }}{{ end }})
